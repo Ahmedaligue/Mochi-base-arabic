@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Mochi Bot | Panel</title>
+    <style>
+        .glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-panel { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        #refresh-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(to right, #06b6d4, #a855f7); z-index: 100; width: 0%; transition: width 0.1s linear; }
+
+        .switch { position: relative; display: inline-block; width: 38px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #334155; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #06b6d4; }
+        input:checked + .slider:before { transform: translateX(18px); }
+
+        .panel-gestion { display: none; overflow: hidden; }
+        .panel-gestion.open { display: block; animation: fadeIn 0.4s ease-out; }
+        
+        .status-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+    </style>
+</head>
+<body class="bg-[#020617] text-white min-h-[100dvh] font-sans p-4 sm:p-8">
+
+    <div id="refresh-bar"></div>
+
+    <div class="max-w-5xl mx-auto relative z-10 animate-panel" id="main-content">
+        
+        <header class="flex flex-col sm:flex-row justify-between items-center mb-10 gap-6 glass p-6 rounded-[2.5rem] border border-white/5 shadow-2xl">
+            <div class="flex items-center gap-5">
+                <div class="relative group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-full blur opacity-40 group-hover:opacity-70 transition duration-500"></div>
+                    <img src="https://avatars.githubusercontent.com/u/250554332?v=4" class="relative w-16 h-16 rounded-full border-2 border-slate-900 object-cover shadow-2xl">
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black tracking-tighter uppercase italic bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">Mochi Panel</h1>
+                    <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] flex items-center gap-2">
+                        <span class="w-2 h-2 bg-cyan-500 rounded-full"></span> {{USER_NAME}}
+                    </p>
+                </div>
+            </div>
+            <button onclick="navegar('/logout')" class="flex items-center gap-2 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white px-8 py-3.5 rounded-2xl font-black transition-all duration-300 border border-red-500/20 active:scale-95 text-xs uppercase tracking-widest">
+                <span>Cerrar Sesión</span>
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+            </button>
+        </header>
+
+        <div class="grid lg:grid-cols-2 gap-8">
+            <section class="glass p-8 rounded-[3rem] border border-white/5 h-fit">
+                <h2 class="text-xl font-black mb-8 flex items-center gap-3 uppercase italic text-cyan-400">
+                    <i data-lucide="unplug" class="w-5 h-5"></i> Vincular Bot
+                </h2>
+                <form action="/vincular" method="POST" class="space-y-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] uppercase font-black text-slate-500 ml-4 tracking-widest">Número de WhatsApp</label>
+                        <input type="text" name="number" placeholder="Ej: 51968382008" required 
+                            class="w-full bg-black/40 border border-white/10 rounded-[1.5rem] p-5 text-sm outline-none focus:border-cyan-500/50 font-mono transition-all">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button name="method" value="qr" class="bg-white text-black font-black p-4 rounded-2xl hover:bg-cyan-400 transition-all text-xs uppercase shadow-lg shadow-white/5 active:scale-95">Código QR</button>
+                        <button name="method" value="code" class="bg-slate-800 text-white font-black p-4 rounded-2xl hover:bg-purple-600 transition-all text-xs border border-white/10 uppercase active:scale-95">Código de 8 dígitos</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="glass p-8 rounded-[3rem] border border-white/5 flex flex-col relative overflow-hidden">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-xl font-black flex items-center gap-3 uppercase italic text-purple-400">
+                        <i data-lucide="layers" class="w-5 h-5"></i> Sesiones
+                    </h2>
+                    <span class="bg-purple-500/20 text-purple-400 px-4 py-1.5 rounded-full text-[10px] font-black border border-purple-500/20 uppercase">
+                        {{BOTS_COUNT}} Activos
+                    </span>
+                </div>
+
+                <div class="space-y-4 overflow-y-auto custom-scroll max-h-[500px] pr-2">
+                    {{BOTS_LIST}}
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, background: '#1e293b', color: '#fff' });
+
+        function toggleGestionar(id) {
+            const panel = document.getElementById(`panel-${id}`);
+            panel.classList.toggle('open');
+        }
+
+        async function guardarAjuste(id, tipo, valor) {
+            try {
+                const res = await fetch('/api/update-bot', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ number: id, [tipo]: valor })
+                });
+                if (res.ok) Toast.fire({ icon: 'success', title: 'Ajuste actualizado' });
+            } catch (e) {
+                Toast.fire({ icon: 'error', title: 'Error de conexión' });
+            }
+        }
+
+        async function confirmarEliminacion(id) {
+            const result = await Swal.fire({
+                title: '¿Eliminar Bot?',
+                text: "Se cerrará la sesión y se borrarán los archivos.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                background: '#0f172a',
+                color: '#fff',
+                confirmButtonText: 'Eliminar'
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    const res = await fetch(`/delete-bot/${id}`);
+                    const data = await res.json();
+                    if (data.status) {
+                        Toast.fire({ icon: 'success', title: 'Bot eliminado correctamente' });
+                        setTimeout(() => location.reload(), 800);
+                    }
+                } catch (e) {
+                    Toast.fire({ icon: 'error', title: 'Error al eliminar' });
+                }
+            }
+        }
+
+        // Lógica de Refresco
+        let timeLeft = 30000;
+        setInterval(() => {
+            const isTyping = document.activeElement.tagName === 'INPUT';
+            const isPanelOpen = document.querySelector('.panel-gestion.open');
+            if (isTyping || isPanelOpen || Swal.isVisible()) return;
+
+            timeLeft -= 100;
+            document.getElementById('refresh-bar').style.width = ((30000 - timeLeft) / 30000 * 100) + '%';
+            if (timeLeft <= 0) location.reload();
+        }, 100);
+
+        function navegar(url) {
+            document.getElementById('main-content').style.opacity = '0';
+            setTimeout(() => window.location.href = url, 400);
+        }
+    </script>
+</body>
+</html>
