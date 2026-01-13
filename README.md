@@ -46,7 +46,7 @@ Mochi Bot es una plataforma avanzada de gestión de sub-bots para WhatsApp, cons
 
 2.  **Iniciar el sistema principal:**
     ```bash
-    npm start
+    node index
     ```
 
 3.  **Acceder al panel:**
