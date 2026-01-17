@@ -13,15 +13,16 @@ let handler = async (m, { conn }) => {
     const ram = (process.memoryUsage().rss / 1024 / 1024).toFixed(2);
     const totalRam = (os.totalmem() / 1024 / 1024 / 1024).toFixed(1);
 
-    const info = `┏━━━━ *BOT SYSTEM INFO* ━━━━┓\n` +
-                 `┃ 🤖 *Nombre:* BrailleBot\n` +
-                 `┃ 🕒 *Uptime:* ${formatUptime(uptime)}\n` +
-                 `┃ 📊 *RAM:* ${ram}MB / ${totalRam}GB\n` +
-                 `┃ ⚙️ *Plataforma:* ${os.platform()}\n` +
+    const info = `┏━━━━ *معلةمات البوت* ━━━━┓\n` +
+                 `┃ 🤖 *الاسم:* BrailleBot\n` +
+                 `┃ 🕒 *مدة التشغيل:* ${formatUptime(uptime)}\n` +
+                 `┃ 📊 *الرام:* ${ram}MB / ${totalRam}GB\n` +
+                 `┃ ⚙️ *المنصه:* ${os.platform()}\n` +
                  `┗━━━━━━━━━━━━━━━━━━━━┛`;
 
     await m.reply(info);
 };
 
-handler.command = ['info', 'botinfo', 'status'];
+handler.command = ['info', 'botinfo', 'معلومات'];
+
 export default handler;
