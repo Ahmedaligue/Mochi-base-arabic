@@ -8,13 +8,13 @@ const __dirname = path.dirname(__filename);
 
 const config = {
     // INFORMACIÓN BÁSICA
-    botName: 'BrailleBot',
-    ownerName: 'TuNombre',
+    botName: 'base bot',
+    ownerName: 'ahmed aligue',
 
     // Usamos un Array por si quieres añadir más de un dueño en el futuro
     owners: [
-        ['51928616320', 'TuNombre Principal'], 
-        ['51922222222', 'Dueño Secundario']
+        ['212625457341', 'ahmeed aligue'], 
+        ['212625457341', 'ahmed aligue']
     ],
     
     // CONFIGURACIÓN DE COMANDOS
@@ -39,13 +39,14 @@ const config = {
     },
 
     // TEXTOS PREDETERMINADOS (Para ahorrar tiempo en los plugins)
-    messages: {
-        wait: '⏳ *Cargando... por favor espera.*',
-        error: '❌ *Hubo un error inesperado.*',
-        owner: '👑 *Este comando es solo para mi dueño.*',
-        group: '👥 *Este comando solo sirve en grupos.*',
-        private: '👤 *Este comando solo sirve en chat privado.*'
-    }
+   messages: {
+    wait: '⏳ *جارٍ التحميل... من فضلك انتظر.*',
+    error: '❌ *حدث خطأ غير متوقع.*',
+    owner: '👑 *هذا الأمر مخصص فقط لمالكي.*',
+    group: '👥 *هذا الأمر يعمل فقط داخل المجموعات.*',
+    private: '👤 *هذا الأمر يعمل فقط في الدردشة الخاصة.*'
+}
 };
+
 
 export default config;
