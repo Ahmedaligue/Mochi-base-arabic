@@ -5,8 +5,9 @@ let handler = async (m, { conn }) => {
     const end = Date.now();
     const speed = end - start;
 
-    await m.reply(`*¡PONG!* 🚀\n\n> 🛰️ Latencia: *${speed}ms*`);
+    await m.reply(`*سرعة البوت* 🚀: *${speed}ms*`);
 };
 
-handler.command = ['ping', 'p'];
+handler.command = ['ping', 'بينغ'];
+
 export default handler;
