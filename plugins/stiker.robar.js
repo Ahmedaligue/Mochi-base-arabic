@@ -1,7 +1,8 @@
 import { Sticker, StickerTypes } from 'wa-sticker-formatter';
 
 let handler = async (m, { conn, text, q, mime }) => {
-    if (!/webp/.test(mime)) return m.reply('「✦」Responde a un sticker para cambiar sus metadatos.');
+    if (!/webp/.test(mime)) 
+        return m.reply('「✦」قم بالرد على ستيكر لتغيير بياناته (Pack/Author).');
     
     let [pack, auth] = text.split('|');
     await m.react('📝');
@@ -9,8 +10,8 @@ let handler = async (m, { conn, text, q, mime }) => {
     try {
         let buffer = await q.download();
         let sticker = new Sticker(buffer, {
-            pack: pack || 'BrailleBot Pack',
-            author: auth || 'System',
+            pack: pack || 'حزمة سينكو',
+            author: auth || 'تست',
             type: StickerTypes.FULL,
             quality: 60
         });
@@ -18,9 +19,10 @@ let handler = async (m, { conn, text, q, mime }) => {
         await conn.sendMessage(m.chat, { sticker: await sticker.toBuffer() }, { quoted: m });
         await m.react('✅');
     } catch (e) {
-        m.reply('「✦」Error al modificar el sticker.');
+        m.reply('「✦」حدث خطأ أثناء تعديل بيانات الستيكر.');
+        await m.react('❌');
     }
 };
 
-handler.command = ['steal', 'robar', 'wm'];
+handler.command = ['steal', 'robar', 'wm', 'حقوق', 'تعديل_ستيكر'];
 export default handler;
