@@ -1,5 +1,5 @@
 let handler = async (m, { conn, text }) => {
-    if (!text) return m.reply('*[!] Debes escribir el texto a convertir.*');
+    if (!text) return m.reply('*[!] يجب أن تكتب النص المراد تحويله.*');
     
     const brailleAlfabeto = {
         'a': '⠁', 'b': '⠃', 'c': '⠉', 'd': '⠙', 'e': '⠑',
@@ -11,8 +11,8 @@ let handler = async (m, { conn, text }) => {
     };
 
     let t = text.toLowerCase().split('').map(c => brailleAlfabeto[c] || c).join('');
-    m.reply(`*TRADUCCIÓN BRAILLE*\n\n${t}`);
+    m.reply(`*ترجمة إلى برايل*\n\n${t}`);
 };
 
-handler.command = ['braille', 'brayler'];
+handler.command = ['braille', 'brayler', 'برايل'];
 export default handler;
